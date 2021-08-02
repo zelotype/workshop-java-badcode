@@ -94,6 +94,8 @@ class RegisterBusinessTest {
         Exception exception = assertThrows(SaveSpeakerException.class, () ->
                 registerBusiness.register(null, speaker)
         );
+
+        assertEquals("Can't save a speaker.", exception.getMessage());
     }
 
     @Test

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegisterBusinessTest {
+class RegisterBusinessFailureTest {
 
     @Test
     @DisplayName("Speaker's First name is Null")
@@ -96,22 +96,5 @@ class RegisterBusinessTest {
         );
 
         assertEquals("Can't save a speaker.", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("Success case register business")
-    public void successRegister() {
-        RegisterBusiness registerBusiness = new RegisterBusiness();
-        SpeakerRepository speakerRepository = (SpeakerRepository) speaker -> 1;
-
-        Speaker speaker = new Speaker();
-        speaker.setFirstName("Kawisara");
-        speaker.setLastName("Bunyen");
-        speaker.setEmail("kawisara@gmail.com");
-        speaker.setExp(9);
-
-        int actualResult = registerBusiness.register(speakerRepository, speaker);
-
-        assertEquals(1, actualResult);
     }
 }

@@ -100,12 +100,7 @@ class RegisterBusinessTest {
     @DisplayName("Success case register business")
     public void successRegister() {
         RegisterBusiness registerBusiness = new RegisterBusiness();
-        SpeakerRepository speakerRepository = new SpeakerRepository() {
-            @Override
-            public Integer saveSpeaker(Speaker speaker) {
-                return 1;
-            }
-        };
+        SpeakerRepository speakerRepository = (SpeakerRepository) speaker -> 1;
 
         Speaker speaker = new Speaker();
         speaker.setFirstName("Kawisara");

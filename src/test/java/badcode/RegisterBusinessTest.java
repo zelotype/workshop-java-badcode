@@ -113,8 +113,8 @@ class RegisterBusinessTest {
         speaker.setEmail("kawisara@gmail.com");
         speaker.setExp(9);
 
-        int result = registerBusiness.register(speakerRepository, speaker);
+        int actualResult = registerBusiness.register(speakerRepository, speaker);
 
-        assertEquals(result, 1);
+        assertEquals(1, actualResult);
     }
 }

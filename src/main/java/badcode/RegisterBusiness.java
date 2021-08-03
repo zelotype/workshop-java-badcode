@@ -6,36 +6,46 @@ public class RegisterBusiness {
 
     public Integer register(SpeakerRepository repository, Speaker speaker) {
         Integer speakerId;
-        String[] domains = {"gmail.com", "live.com"};
 
-        if (speaker.getFirstName() != null && !speaker.getFirstName().trim().equals("")) {
-            if (speaker.getLastName() != null && !speaker.getLastName().trim().equals("")) {
-                if (speaker.getEmail() != null && !speaker.getEmail().trim().equals("")) {
-                    // Your Tasks ...
-                    String emailDomain = getEmailDomain(speaker.getEmail()); // Avoid ArrayIndexOutOfBound
-                    if (Arrays.stream(domains).filter(it -> it.equals(emailDomain)).count() == 1) {
-                        int exp = speaker.getExp();
-                        speaker.setRegistrationFee(getFee(exp));
-                        try {
-                            speakerId = repository.saveSpeaker(speaker);
-                        } catch (Exception exception) {
-                            throw new SaveSpeakerException("Can't save a speaker.");
-                        }
-                    } else {
-                        throw new SpeakerDoesntMeetRequirementsException("Speaker doesn't meet our standard rules.");
-                    }
-                } else {
-                    throw new ArgumentNullException("Email is required.");
-                }
-            } else {
-                throw new ArgumentNullException("Last name is required.");
-            }
-        } else {
-            throw new ArgumentNullException("First name is required.");
+        validateSpeaker(speaker);
+
+        // Main process :: Save Speaker to Repository
+        int exp = speaker.getExp();
+        speaker.setRegistrationFee(getFee(exp));
+        try {
+            speakerId = repository.saveSpeaker(speaker);
+        } catch (Exception exception) {
+            throw new SaveSpeakerException("Can't save a speaker.");
         }
 
         return speakerId;
     }
+
+    private void validateSpeaker(Speaker speaker) {
+        if (isEmptyOrNull(speaker.getFirstName())) {
+            throw new ArgumentNullException("First name is required.");
+        }
+        if (isEmptyOrNull(speaker.getLastName())) {
+            throw new ArgumentNullException("Last name is required.");
+        }
+        if (isEmptyOrNull(speaker.getEmail())) {
+            throw new ArgumentNullException("Email is required.");
+        }
+        if (isValidEmailDomain(speaker.getEmail())) {
+            throw new SpeakerDoesntMeetRequirementsException("Speaker doesn't meet our standard rules.");
+        }
+    }
+
+    private boolean isValidEmailDomain(String email) {
+        String[] domainsOfEmail = {"gmail.com", "live.com"};
+        String emailDomain = getEmailDomain(email);
+        return Arrays.stream(domainsOfEmail).filter(it -> it.equals(emailDomain)).count() != 1;
+    }
+
+    private boolean isEmptyOrNull(String properties) {
+        return properties == null || properties.trim().equals("");
+    }
+
 
     int getFee(int exp) {
         int fee = 0;
